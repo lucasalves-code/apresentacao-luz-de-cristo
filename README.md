@@ -10,4 +10,5 @@ Apresentação interativa desenvolvida em HTML, CSS e JavaScript voltada para sa
 
 ## 🚀 Como executar localmente
 
-Basta abrir o arquivo `apresentacao_luz_de_cristo.html` em qualquer navegador web (Chrome, Edge, Firefox, Safari).
+Basta abrir o arquivo `index.html` em qualquer navegador web (Chrome, Edge, Firefox, Safari).
+
