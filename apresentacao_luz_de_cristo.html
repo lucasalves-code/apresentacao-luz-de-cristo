@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Luz de Cristo - Apresentação Interativa</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #d97706;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary), #3b82f6);
+            color: white;
+            padding: 1rem 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        header p {
+            margin: 0.25rem 0 0 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .container {
+            flex: 1;
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .slide-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
+            padding: 2.5rem;
+            min-height: 380px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            border-top: 6px solid var(--secondary);
+        }
+        .slide-number {
+            position: absolute;
+            top: 1.5rem;
+            right: 2rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #64748b;
+            background: #f1f5f9;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+        }
+        .slide-content h2 {
+            color: var(--primary);
+            margin-top: 0;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+        .slide-content p, .slide-content ul {
+            font-size: 1.15rem;
+            line-height: 1.6;
+            color: #334155;
+        }
+        .slide-content ul {
+            padding-left: 1.5rem;
+        }
+        .slide-content li {
+            margin-bottom: 0.75rem;
+        }
+        .highlight-box {
+            background: #fffbeb;
+            border-left: 4px solid var(--secondary);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            gap: 1rem;
+        }
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        button:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-1px);
+        }
+        button:active {
+            transform: translateY(1px);
+        }
+        button:disabled {
+            background-color: #cbd5e1;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+        .mode-selector {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        .mode-selector button {
+            background-color: #475569;
+            margin: 0 0.5rem;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+        }
+        .mode-selector button.active {
+            background-color: var(--secondary);
+        }
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.85rem;
+            color: #64748b;
+            background: #e2e8f0;
+        }
+        .role-badge {
+            display: inline-block;
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>A Luz de Cristo</h1>
+        <p>Apresentação Interativa para Sala de Aula</p>
+    </header>
+
+    <div class="container">
+        <div class="mode-selector">
+            <span style="font-weight: 600; margin-right: 0.5rem; color: #475569;">Modo de Visualização:</span>
+            <button id="btn-presenter" class="active" onclick="setMode('presenter')">Painel do Professor (Controle)</button>
+            <button id="btn-viewer" onclick="setMode('viewer')">Modo Aluno (Acompanhar)</button>
+        </div>
+
+        <div class="slide-card" id="slideCard">
+            <div class="slide-number" id="slideNum">Slide 1 de 5</div>
+            <div class="slide-content" id="slideContent">
+                <!-- Conteúdo injetado via JS -->
+            </div>
+        </div>
+
+        <div class="controls" id="controlsContainer">
+            <button id="prevBtn" onclick="changeSlide(-1)" disabled>← Anterior</button>
+            <span id="statusIndicator" style="font-weight: 500; color: #64748b; font-size: 0.95rem;">Controle Ativo</span>
+            <button id="nextBtn" onclick="changeSlide(1)">Próximo →</button>
+        </div>
+    </div>
+
+    <footer>
+        Dica: Para os alunos acompanharem em tempo real nos celulares, você pode enviar o arquivo ou hospedá-lo (ex: GitHub Pages, Vercel ou Netlify).
+    </footer>
+
+    <script>
+        const slides = [
+            {
+                title: "1. Introdução: O Que é a Luz de Cristo?",
+                content: `
+                    <p>A Luz de Cristo é a influência divina, luz ou espírito que vem de Deus por meio de Jesus Cristo.</p>
+                    <div class="highlight-box">
+                        "E a luz resplandece nas trevas, e as trevas não a compreenderam." — João 1:5
+                    </div>
+                    <ul>
+                        <li>Ela dá vida a todas as coisas.</li>
+                        <li>Ilumina a consciência de cada homem e mulher que nasce no mundo.</li>
+                        <li>Conduz-nos a distinguir o bem do mal.</li>
+                    </ul>
+                `
+            },
+            {
+                title: "2. A Consciência e o Discernimento Moral",
+                content: `
+                    <p>Um dos papéis fundamentais da Luz de Cristo é equipar cada ser humano com um senso moral innato:</p>
+                    <ul>
+                        <li><strong>Senso de Justiça:</strong> Capacidade natural de reconhecer a equidade e a verdade.</li>
+                        <li><strong>Guia Interior:</strong> A voz da consciência que nos impele a fazer o bem e rejeitar o mal.</li>
+                        <li><strong>Preparação:</strong> Ela prepara o coração humano para receber influências ainda maiores, como o dom do Espírito Santo.</li>
+                    </ul>
+                `
+            },
+            {
+                title: "3. A Luz que Ilumina Todo Homem",
+                content: `
+                    <p>Diferente do Espírito Santo (que é concedido especificamente após o batismo pela imposição de mãos), a Luz de Cristo é universal:</p>
+                    <div class="highlight-box">
+                        "A verdadeira luz, que alumia a todo homem, vinha ao mundo." — João 1:9
+                    </div>
+                    <ul>
+                        <li>Nenhum ser humano está desprovido desta influência divina.</li>
+                        <li>Atua em pessoas de todas as culturas, crenças e épocas, inspirando grandes obras, bondade e busca pela verdade.</li>
+                    </ul>
+                `
+            },
+            {
+                title: "4. A Relação com o Espírito Santo",
+                content: `
+                    <p>É importante não confundir as duas manifestações espirituais:</p>
+                    <ul>
+                        <li><strong>Luz de Cristo:</strong> Influência difusa e constante que ilumina a consciência de todos os seres humanos.</li>
+                        <li><strong>Espírito Santo:</strong> A terceira pessoa da Trindade, um dom pessoal que habita, guia e testifica a verdade aos que fazem convênios e buscam ativamente a retidão.</li>
+                    </ul>
+                `
+            },
+            {
+                title: "5. Conclusão: Vivendo na Luz",
+                content: `
+                    <p>Reconhecer e seguir a Luz de Cristo transforma nossa perspectiva diária:</p>
+                    <ul>
+                        <li>Atender aos sussurros da consciência para servir ao próximo.</li>
+                        <li>Ser nós mesmos instrumentos de luz no ambiente em que vivemos (escola, trabalho, família).</li>
+                    </ul>
+                    <div class="highlight-box">
+                        "Vós sois a luz do mundo... assim resplandeça a vossa luz diante dos homens." — Mateus 5:14, 16
+                    </div>
+                `
+            }
+        ];
+
+        let currentSlide = 0;
+        let mode = 'presenter'; // 'presenter' or 'viewer'
+
+        // BroadcastChannel para sincronizar abas na mesma máquina ou rede local (se aberto via servidor local)
+        const channel = new BroadcastChannel('luz_de_cristo_slides');
+
+        channel.onmessage = (event) => {
+            if (event.data && typeof event.data.slide === 'number') {
+                currentSlide = event.data.slide;
+                renderSlide();
+                if (mode === 'presenter' && event.data.source !== 'presenter') {
+                    // Atualiza se veio de fora
+                }
+            }
+        };
+
+        function renderSlide() {
+            const slide = slides[currentSlide];
+            document.getElementById('slideNum').innerText = `Slide ${currentSlide + 1} de ${slides.length}`;
+            
+            let html = `<h2>${slide.title}</h2>` + slide.content;
+            document.getElementById('slideContent').innerHTML = html;
+
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === slides.length - 1;
+
+            if (mode === 'viewer') {
+                document.getElementById('controlsContainer').style.display = 'none';
+                document.getElementById('statusIndicator').innerText = 'Modo Espectador (Sincronizado)';
+            } else {
+                document.getElementById('controlsContainer').style.display = 'flex';
+                document.getElementById('statusIndicator').innerText = `Controle Ativo (${currentSlide + 1}/${slides.length})`;
+            }
+        }
+
+        function changeSlide(direction) {
+            const newIndex = currentSlide + direction;
+            if (newIndex >= 0 && newIndex < slides.length) {
+                currentSlide = newIndex;
+                renderSlide();
+                // Envia para outras abas / dispositivos na mesma sessão
+                channel.postMessage({ slide: currentSlide, source: 'presenter' });
+            }
+        }
+
+        function setMode(selectedMode) {
+            mode = selectedMode;
+            document.getElementById('btn-presenter').classList.toggle('active', mode === 'presenter');
+            document.getElementById('btn-viewer').classList.toggle('active', mode === 'viewer');
+            renderSlide();
+        }
+
+        // Inicialização
+        renderSlide();
+    </script>
+</body>
+</html>
